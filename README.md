@@ -13,13 +13,14 @@ Elle repertorie les vehicules utilisés par la STAR (gestionnaire du réseau de 
 
 ### Lancer l'application
 
-Cloner le depot git <p><p/>
-Lancer les commandes d'installation:
+#### Cloner le depot git 
+> git clone <repo>
+#### Lancer les commandes d'installation:
 
- #### Installation des dependences necessaires
+ ##### Installation des dependences necessaires
  > npm install
  
- #### Lancer l'application
+ ##### Lancer l'application
  > npm run dev
 
  ### Note:
