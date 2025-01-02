@@ -4,7 +4,7 @@
 ### Introduction
 
 Ce projet rentre dans le cadre de l'UE WE du Master IL (M1). <p><p/>Il a pour but de réaliser une application web ou un composant d'une application deja existante avec le framework de notre choix (AngularJS, VueJS ou ReactJS).
-Ce projet a été réalisé par Hoel Girard (@masterhaku) en 2024
+Ce projet a été réalisé par Hoel Girard ([@masterhaku]) en 2024
 
 ### Détails
 
