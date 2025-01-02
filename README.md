@@ -14,7 +14,7 @@ Elle repertorie les vehicules utilisés par la STAR (gestionnaire du réseau de 
 ### Lancer l'application
 
 #### Cloner le depot git 
-> git clone <repo>
+> git clone [repo]
 #### Lancer les commandes d'installation:
 
  ##### Installation des dependences necessaires
