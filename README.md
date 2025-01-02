@@ -22,5 +22,5 @@ Lancer les commandes d'installation:
  #### Lancer l'application
  > npm run dev
 
- #### Note:
+ ### Note:
 <i>Le projet a été developpé en Vue 3.5, TailwindCSS 3.4.17 et TypeScript 5.6.2<i/>
