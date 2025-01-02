@@ -11,7 +11,6 @@
   import { defineProps } from 'vue';
 import type { Metro } from '../types';
   
-  // Définir les propriétés que le composant attend
   const props = defineProps({
     metro: {
       type: Object as () => Metro,

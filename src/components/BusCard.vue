@@ -11,7 +11,7 @@
   import { defineProps } from 'vue';
 import type { Bus } from '../types';
   
-  // Définir les propriétés que le composant attend
+
   const props = defineProps({
     bus: {
       type: Object as () => Bus,

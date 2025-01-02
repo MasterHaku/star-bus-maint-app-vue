@@ -54,7 +54,6 @@
 import { defineProps, defineEmits } from 'vue';
 import type {  Metro } from '../types';
 
-// Définir les propriétés attendues par le composant
 const props = defineProps({
     metro: {
         type: Object as () => Metro,
@@ -66,15 +65,10 @@ const props = defineProps({
     },
 });
 
-// Définir l'événement pour fermer le modal
 const emit = defineEmits(['close']);
 
-// Méthode pour fermer le modal
 const closeModal = () => {
     emit('close');
 };
 </script>
 
-<style scoped>
-/* Styles du modal */
-</style>

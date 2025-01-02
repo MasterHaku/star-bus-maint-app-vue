@@ -63,7 +63,7 @@
 import { defineProps, defineEmits } from 'vue';
 import type { Bus } from '../types';
 
-// Définir les propriétés attendues par le composant
+
 const props = defineProps({
     bus: {
         type: Object as () => Bus,
@@ -75,15 +75,15 @@ const props = defineProps({
     },
 });
 
-// Définir l'événement pour fermer le modal
+
 const emit = defineEmits(['close']);
 
-// Méthode pour fermer le modal
+
 const closeModal = () => {
     emit('close');
 };
 </script>
 
 <style scoped>
-/* Styles du modal */
+
 </style>

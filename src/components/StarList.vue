@@ -1,22 +1,24 @@
 <template>
-  <div class="flex flex-col items-center justify-center bg-gray-100 py-5">
-    <div class="text-center w-full max-w-3xl p-4 bg-white rounded-lg shadow-lg">
+  <div class="flex flex-col items-center justify-center border-1 border-stargreen py-5">
+    <div class="text-center w-full max-w-3xl p-4 bg-gray-50 rounded-lg shadow-lg">
 
-      <h1 class="text-2xl font-bold mb-6">Liste des Véhicules</h1>
+      <h1 class="text-2xl font-bold mb-6 rounded-lg ">Liste des Véhicules du Reseau de Transport STAR</h1>
 
       <!-- Bloc des filtres -->
-      <div class="bg-gray-200 p-4 rounded-lg shadow-md space-y-4">
+      <div class="border-2 border-starblue p-4 rounded-lg shadow-md space-y-4 bg-gray-100">
 
         <!-- Switch Affichage Bus / Métros -->
-        <div class="flex items-center justify-center gap-2 bg-gray-100  py-2 rounded-lg ">
+        <div class="flex items-center justify-center gap-2 bg-gray-100 border-2 border-stargreen  py-2 rounded-lg ">
 
-          <label class="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg  cursor-pointer">
+          <label
+            class="flex items-center gap-2 bg-gray-100 text-black px-4 py-2 rounded-lg cursor-pointer border-2 border-stargreen ">
             <input type="checkbox" class="toggle-switch" v-model="isShowingBus" @change="switchResource" />
-            <span class="text-sm">{{ isShowingBus ? 'Bus' : 'Métros' }}</span>
+            <span class="text-sm items-end">{{ isShowingBus ? 'Bus' : 'Métros' }}</span>
           </label>
 
           <div class="flex justify-center">
-            <button @click="filterBoth" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <button @click="filterBoth"
+              class="px-6 py-2 bg-gray-100 border-2 border-stargreen text-black rounded-lg hover:bg-gray-200">
               Appliquer les filtres
             </button>
           </div>
@@ -26,7 +28,8 @@
 
         <!-- Filtres -->
         <div class="flex flex-wrap justify-center gap-6">
-          <div v-if="isShowingBus" class="flex flex-col items-center bg-white p-4 rounded-lg shadow-sm">
+          <div v-if="isShowingBus"
+            class="flex flex-col items-center border-2 border-staryellow bg-white p-4 rounded-lg ">
             <label for="depot" class="block text-gray-700 mb-2 text-sm font-medium">Filtrer par Dépôt</label>
             <select id="depot" v-model="selectedDepot" class="px-4 py-2 border rounded w-full text-sm">
               <option value="">Tous les dépôts</option>
@@ -34,7 +37,7 @@
             </select>
           </div>
 
-          <div class="flex flex-col items-center bg-white p-4 rounded-lg shadow-sm">
+          <div class="flex flex-col items-center border-2 border-staryellow bg-white p-4 rounded-lg ">
             <label for="marque" class="block text-gray-700 mb-2 text-sm font-medium">Filtrer par Marque</label>
             <select id="marque" v-model="selectedBrand" class="px-4 py-2 border rounded w-full text-sm">
               <option value="">Toutes les marques</option>
@@ -43,7 +46,8 @@
           </div>
 
 
-          <div v-if="isShowingBus" class="flex flex-col items-center bg-white p-4 rounded-lg shadow-sm">
+          <div v-if="isShowingBus"
+            class="flex flex-col items-center border-2 border-staryellow bg-white p-4 rounded-lg ">
             <label for="marque" class="block text-gray-700 mb-2 text-sm font-medium">Filtrer par Exploitant</label>
             <select id="marque" v-model="selectedMaint" class="px-4 py-2 border rounded w-full text-sm">
               <option value="">Tous les exploitants</option>
@@ -106,28 +110,34 @@
 import { ref, onMounted, computed } from 'vue';
 import UtilsApi from '../Utils/UtilsApi';
 import type { Bus, Metro } from '../types';
-import BusCard from './BusCard.vue'; // Importer le composant BusCard
-import BusDetail from './BusDetail.vue'; // Importer le composant BusDetailsModal
+import BusCard from './BusCard.vue'; 
+import BusDetail from './BusDetail.vue'; 
 import MetroCard from './MetroCard.vue';
 import MetroDetail from './MetroDetail.vue';
 
-const buses = ref<Bus[]>([]); // Liste de tous les bus
+// Listes de tous les elements
+const buses = ref<Bus[]>([]); 
 const metros = ref<Metro[]>([]);
 
-const filteredBuses = ref<Bus[]>([]); // Liste filtrée pour l'affichage
+const filteredBuses = ref<Bus[]>([]); 
 const filteredMetro = ref<Metro[]>([]);
 
-const selectedBrand = ref(""); // Marque sélectionnée pour le filtre
-const selectedDepot = ref(""); // Dépôt sélectionné pour le filtre
+// Constantes pour les filtres
+const selectedBrand = ref(""); 
+const selectedDepot = ref(""); 
 const selectedMaint = ref("");
 const selectedLine = ref("");
-const selectedRessource = ref<Bus | Metro | null>(null); // Bus sélectionné pour le modal
 
-const seenIdsBus = new Set(); // Set pour suivre les IDs déjà vus
+// Ressource selectionée pour la Card
+const selectedRessource = ref<Bus | Metro | null>(null); 
+
+// Set pour suivre les IDs déjà vus
+const seenIdsBus = new Set(); 
 const seenIdsMetro = new Set();
 
+//Etats divers
 const isShowingBus = ref(true);
-const isModalVisible = ref(false); // État pour afficher ou masquer le modal
+const isModalVisible = ref(false); 
 
 
 onMounted(async () => {
@@ -186,19 +196,12 @@ const filterBoth = () => {
       const brandMatch = selectedBrand.value ? bus.marque === selectedBrand.value : true;
       const depotMatch = selectedDepot.value ? bus.codedepot === selectedDepot.value : true;
       const maintenanceMatch = selectedMaint.value ? bus.codetransporteur == selectedMaint.value : true;
-
-
-
-
-
       return brandMatch && depotMatch && maintenanceMatch;
     });
   } else {
     filteredMetro.value = metros.value.filter((metro) => {
       const brandMatch = selectedBrand.value ? metro.marque === selectedBrand.value : true;
       const depotMatch = selectedLine.value ? metro.idligne === selectedLine.value : true;
-
-
       return brandMatch && depotMatch;
     });
   }
@@ -236,13 +239,11 @@ const uniqueLine = computed(() => {
 
 
 type Ressource = Bus | Metro;
-// Méthode pour afficher les détails du bus dans un modal
 const showDetails = (ressource: Ressource) => {
   selectedRessource.value = ressource;
   isModalVisible.value = true;
 };
 
-// Méthode pour fermer le modal
 const closeModal = () => {
   selectedRessource.value = null;
   isModalVisible.value = false;
@@ -275,7 +276,7 @@ const closeModal = () => {
 }
 
 .toggle-switch:checked {
-  background-color: #4caf50;
+  background-color: #02b1ae;
 }
 
 .toggle-switch::before {
