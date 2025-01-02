@@ -79,6 +79,9 @@
       </span>
     </div>
 
+    <div class="fixed bottom-4 left-4 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-lg">
+      <button @click="goBack">Retour en arrière</button>
+    </div>
 
 
     <!-- Grille de cartes -->
@@ -92,10 +95,14 @@
     </div>
 
     <!-- Message si aucune donnée -->
-    <div v-else class="text-gray-500">
-      Aucun vehicule ne correspond aux critères sélectionnés.
+    <div v-else>
+      <div v-if="openedPopup && (filteredBuses.length > 0 || filteredMetro.length > 0)" class="fixed inset-0  flex items-center justify-center"
+        @click="closePopup">
+        <div class=" bg-red-600  text-white p-4 rounded-full text-xl ">
+          Aucun véhicule ne correspond aux critères sélectionnés
+        </div>
+      </div>
     </div>
-
     <!-- Modal de détails du bus -->
 
     <BusDetail v-if="isModalVisible && isShowingBus" :bus="selectedRessource" :isVisible="isModalVisible"
@@ -110,34 +117,36 @@
 import { ref, onMounted, computed } from 'vue';
 import UtilsApi from '../Utils/UtilsApi';
 import type { Bus, Metro } from '../types';
-import BusCard from './BusCard.vue'; 
-import BusDetail from './BusDetail.vue'; 
+import BusCard from './BusCard.vue';
+import BusDetail from './BusDetail.vue';
 import MetroCard from './MetroCard.vue';
 import MetroDetail from './MetroDetail.vue';
 
 // Listes de tous les elements
-const buses = ref<Bus[]>([]); 
+const buses = ref<Bus[]>([]);
 const metros = ref<Metro[]>([]);
 
-const filteredBuses = ref<Bus[]>([]); 
+const filteredBuses = ref<Bus[]>([]);
 const filteredMetro = ref<Metro[]>([]);
 
 // Constantes pour les filtres
-const selectedBrand = ref(""); 
-const selectedDepot = ref(""); 
+const selectedBrand = ref("");
+const selectedDepot = ref("");
 const selectedMaint = ref("");
 const selectedLine = ref("");
 
+const openedPopup = ref(true);
+
 // Ressource selectionée pour la Card
-const selectedRessource = ref<Bus | Metro | null>(null); 
+const selectedRessource = ref<Bus | Metro | null>(null);
 
 // Set pour suivre les IDs déjà vus
-const seenIdsBus = new Set(); 
+const seenIdsBus = new Set();
 const seenIdsMetro = new Set();
 
 //Etats divers
 const isShowingBus = ref(true);
-const isModalVisible = ref(false); 
+const isModalVisible = ref(false);
 
 
 onMounted(async () => {
@@ -189,6 +198,18 @@ const switchResource = () => {
   }
 };
 
+const goBack = () => {
+  window.history.back();
+};
+
+const closePopup = () => {
+  openedPopup.value = false;
+  selectedDepot.value = "";
+  selectedBrand.value = "";
+  selectedLine.value = "";
+  selectedMaint.value = "";
+  filterBoth();
+};
 
 const filterBoth = () => {
   if (isShowingBus.value) {

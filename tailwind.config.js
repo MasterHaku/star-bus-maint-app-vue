@@ -14,6 +14,7 @@ export default {
       indigo: colors.indigo,
       yellow: colors.yellow,
       blue: colors.blue,
+      red: colors.red,
       green: colors.green,
       starblue :'#053774',
       stargreen :'#02b1ae',
