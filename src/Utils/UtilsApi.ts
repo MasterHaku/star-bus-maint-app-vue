@@ -7,6 +7,7 @@ class UtilsApi{
         this.url = "https://data.explore.star.fr/api/explore/v2.1/catalog/datasets/";
     }
 
+    
     async performRequest(endpoint:string, offset:number,limit:number): Promise<string[]> {
 
 
@@ -14,7 +15,7 @@ class UtilsApi{
         const finalurl = this.url+endpoint+"?limit="+limit+"&offset="+offset;
         try {
             const response = await axios.get(finalurl);
-            data = response.data; // Stocke les données dans `data`
+            data = response.data.results; // Stocke les données dans `data`
 
         } catch (error) {
          console.log(error);   

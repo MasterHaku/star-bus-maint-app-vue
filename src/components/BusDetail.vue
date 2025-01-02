@@ -64,7 +64,7 @@ import { defineProps, defineEmits } from 'vue';
 import type { Bus } from '../types';
 
 
-const props = defineProps({
+defineProps({
     bus: {
         type: Object as () => Bus,
         required: true,
@@ -84,6 +84,3 @@ const closeModal = () => {
 };
 </script>
 
-<style scoped>
-
-</style>

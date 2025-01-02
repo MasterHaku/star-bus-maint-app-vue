@@ -98,9 +98,9 @@
 
     <!-- Modal de détails du bus -->
 
-    <BusDetail v-if="isModalVisible && isShowingBus" :bus.id="selectedRessource" :isVisible="isModalVisible"
+    <BusDetail v-if="isModalVisible && isShowingBus" :bus="selectedRessource" :isVisible="isModalVisible"
       @close="closeModal" />
-    <MetroDetail v-if="isModalVisible && !isShowingBus" :metro.id="selectedRessource" :isVisible="isModalVisible"
+    <MetroDetail v-if="isModalVisible && !isShowingBus" :metro="selectedRessource" :isVisible="isModalVisible"
       @close="closeModal" />
   </div>
 </template>
@@ -145,8 +145,8 @@ onMounted(async () => {
     const allBuses: Bus[] = [];
     for (let i = 0; i < 7; i++) {
       const dataBus = await UtilsApi.performRequest("tco-bus-materiel-vehicules-td/records", i * 100, 100);
-      if (dataBus && dataBus.results) {
-        dataBus.results.forEach((bus: any) => {
+      if (dataBus) {
+        dataBus.forEach((bus: any) => {
           if (!seenIdsBus.has(bus.id)) {
             seenIdsBus.add(bus.id);
             allBuses.push(bus);
@@ -163,8 +163,8 @@ onMounted(async () => {
   try {
     const allMetros: Metro[] = [];
     const dataMetro = await UtilsApi.performRequest("tco-metro-materiel-vehicules-td/records", 0, 100);
-    if (dataMetro && dataMetro.results) {
-      dataMetro.results.forEach((metro: any) => {
+    if (dataMetro) {
+      dataMetro.forEach((metro: any) => {
         if (!seenIdsMetro.has(metro.id)) {
           seenIdsMetro.add(metro.id);
           allMetros.push(metro);

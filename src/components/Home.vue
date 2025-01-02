@@ -4,7 +4,6 @@
         Bienvenue sur la page d'accueil
       </h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <!-- Première card -->
         <div
           class="card group"
           @click="navigateTo('Vehicles')"
@@ -17,7 +16,6 @@
           </div>
         </div>
   
-        <!-- Deuxième card -->
         <div
           class="card group"
           @click="navigateTo('Stations')"
