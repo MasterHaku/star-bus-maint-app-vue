@@ -32,3 +32,27 @@ export interface Metro{
     idligne: string;
 }
 
+
+export interface SubStat{
+  idstation: number;
+  nom: string;
+  etat: string;
+  idligne: string;
+  lastupdate : Date;
+}
+
+export interface SubStatUtils{
+
+  idequipement: string;
+  nom : string;
+  idstation: number;
+  nomstation: string;
+  type: string;
+  idligne: string;
+  etat: string;
+
+}
+
+export interface BikeStat{
+
+}

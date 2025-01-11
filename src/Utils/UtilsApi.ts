@@ -8,15 +8,26 @@ class UtilsApi{
     }
 
     
-    async performRequest(endpoint:string, offset:number,limit:number): Promise<string[]> {
+    async performRequest(endpoint:string, offset:number,limit:number, id?:number, dataValue?: string): Promise<string[]> {
 
-
+        let finalurl =""
         let data: string[] = [];
-        const finalurl = this.url+endpoint+"?limit="+limit+"&offset="+offset;
+        if(offset == 0 && limit == 0){
+            finalurl = this.url+endpoint;
+        }
+        else if(id !== undefined && dataValue !== undefined){
+            finalurl =  this.url+endpoint+"?select=*&where="+dataValue+"%3D"+id+"&limit=100";
+        }
+        else{
+            finalurl = this.url+endpoint+"?limit="+limit+"&offset="+offset;
+        }
+
+        
+        console.log(finalurl)
         try {
             const response = await axios.get(finalurl);
             data = response.data.results; // Stocke les données dans `data`
-
+            console.log(data)
         } catch (error) {
          console.log(error);   
         }
@@ -26,4 +37,3 @@ class UtilsApi{
 }
 
 export default new UtilsApi();
-//https://data.explore.star.fr/api/explore/v2.1/catalog/datasets/tco-bus-materiel-vehicules-td/records
