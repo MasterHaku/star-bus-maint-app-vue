@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white shadow rounded p-4" :class="{
         'text-green-600 font-bold border border-green-600 rounded px-2 py-1 inline-block': subStat.etat === 'Ouverte',
-        'text-red-600 font-bold border border-red-600 rounded px-2 py-1 inline-block': subStat.etat !== 'Ouverte'
+        'text-red-600 font-bold border border-red-600 rounded px-2 py-1 ': subStat.etat !== 'Ouverte'
       }">
 
 

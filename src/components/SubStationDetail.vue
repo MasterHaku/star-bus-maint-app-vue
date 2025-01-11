@@ -19,8 +19,6 @@
             <p><strong>Nom de la station:</strong> {{ detail.nomstation }}</p>
             <p><strong>Type:</strong> {{ detail.type }}</p>
             <p><strong>ID Ligne:</strong> {{ detail.idligne === '1001' ? 'Ligne A' : detail.idligne === '1002' ? 'Ligne B' : detail.idligne }}</p>
-
-
             <p :class="{
               'text-green-600 font-bold border border-green-600 rounded px-2 py-1 inline-block': detail.etat[0] === 'En fonctionnement',
               'text-red-600 font-bold border border-red-600 rounded px-2 py-1 inline-block': detail.etat[0] !== 'En fonctionnement'

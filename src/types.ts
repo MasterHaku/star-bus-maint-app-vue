@@ -54,5 +54,10 @@ export interface SubStatUtils{
 }
 
 export interface BikeStat{
-
+  nom: string;
+  etat: string;
+  nombreemplacementsactuels: number;
+  nombreemplacementsdisponibles: number;
+  nombrevelosdisponibles: number;
 }
+
