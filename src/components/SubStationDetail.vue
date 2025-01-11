@@ -2,7 +2,7 @@
     <div v-if="isVisible" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white p-6 rounded-lg w-11/12 lg:w-2/3 xl:w-1/2 max-h-[90vh] overflow-y-auto relative">
         <!-- Titre de la station -->
-        <h2 class="text-2xl font-bold mb-4 text-center">{{ subStat.nom }}</h2>
+        <h2 class="text-2xl font-bold mb-4 text-center">Station {{ subStat.nom }}</h2>
   
         <!-- Affichage des compteurs par type -->
         <div v-if="typeCounts" class="mb-4 flex space-x-4 justify-center">
@@ -18,7 +18,7 @@
             <p><strong>Nom:</strong> {{ detail.nom }}</p>
             <p><strong>Nom de la station:</strong> {{ detail.nomstation }}</p>
             <p><strong>Type:</strong> {{ detail.type }}</p>
-            <p><strong>ID Ligne:</strong> {{ detail.idligne === '1001' ? 'Ligne A' : detail.idligne === '1002' ? 'Ligne B' : detail.idligne }}</p>
+            <p ><strong>ID Ligne:</strong> {{ detail.idligne === '1001' ? 'Ligne A' : detail.idligne === '1002' ? 'Ligne B' : detail.idligne }}</p>
             <p :class="{
               'text-green-600 font-bold border border-green-600 rounded px-2 py-1 inline-block': detail.etat[0] === 'En fonctionnement',
               'text-red-600 font-bold border border-red-600 rounded px-2 py-1 inline-block': detail.etat[0] !== 'En fonctionnement'

@@ -1,59 +1,56 @@
 <template>
-  <div class="flex flex-col items-center justify-center py-5">
-    <div class="text-center w-full max-w-md p-4 bg-gray-50 rounded-lg shadow-lg">
-      <h1 class="text-2xl font-bold mb-6 rounded-lg">Liste des Stations et Equipements du Réseau de Transport STAR</h1>
-
+  <div class="flex flex-col items-center justify-center py-5 ">
+    <div class="text-center w-full max-w-md p-4 bg-gray-50 rounded-lg shadow-lg border-2 border-starblue">
+      <h1 class="text-2xl font-bold mb-6 rounded-lg ">Liste des Stations et Equipements du Réseau de Transport STAR</h1>
       <div
         class="w-full inline-flex justify-center items-center p-4 bg-gray-100 border-2 border-starblue rounded-lg shadow-md">
-        <!-- Conteneur du SwitchCustom centré verticalement et horizontalement -->
         <div class="flex items-center justify-center space-x-6">
-          <SwitchCustom :option1="'Stations de Vélos'" :option2="'Stations de Métros'" :option3="'Parcs Relais'"
+          <SwitchCustom :titles="['Stations de Métro', 'Stations de Vélos', 'Parc Relais']"
             @updateOption="handleOptionChange" />
         </div>
       </div>
     </div>
 
-
     <!-- Nombre de ressources trouvées dans une pastille flottante -->
-    <div class="fixed bottom-4 right-4 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-lg">
+    <div class="fixed bottom-4 right-4 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-lg z-10">
       <span>
         {{ isShowingSubStat ? filteredSubStat.length : filteredBikeStat.length }}
         {{ isShowingSubStat ? 'stations de métros' : 'stations de vélos' }} trouvées
       </span>
     </div>
 
-    <div class="fixed bottom-4 left-4 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-lg">
+    <!-- Bouton retour -->
+    <div class="fixed bottom-4 left-4 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-lg z-10">
       <button @click="goBack">Retour en arrière</button>
     </div>
 
     <!-- Grille de cartes -->
-    <div class="grid-container ">
+    <div class="grid-container flex flex-col py-2 min-h-screen flex-grow">
       
-      <div v-if="isShowingSubStat && filteredSubStat.length > 0"
-        class="grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 p-4">
-        <SubStationCard v-for="subStat in filteredSubStat" :key="subStat.nom" :sub-stat="subStat"
-          @click="showDetails(subStat)" />
+      <div v-if="isShowingSubStat && filteredSubStat.length > 0" class="grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 p-4">
+        <SubStationCard v-for="subStat in filteredSubStat" :key="subStat.nom" :sub-stat="subStat" @click="showDetails(subStat)" />
       </div>
 
       <div v-if="!isShowingSubStat && filteredBikeStat.length > 0"
         class="grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 p-4">
         <VeloStationCard v-for="bikeStat in filteredBikeStat" :key="bikeStat.nom" :bike-stat="bikeStat" />
       </div>
-    
+
     </div>
-    <SubStationDetail v-if="isModalVisible && isShowingSubStat" :subStat="selectedRessource" :isVisible="isModalVisible"
-      @close="closeModal" />
+
+    <SubStationDetail v-if="isModalVisible && isShowingSubStat" :subStat="selectedRessource" :isVisible="isModalVisible" @close="closeModal" />
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import UtilsApi from '../Utils/UtilsApi';
 import type { BikeStat, SubStat } from '../types';
 import SubStationCard from './SubStationCard.vue';
 import SubStationDetail from './SubStationDetail.vue';
 import VeloStationCard from './VeloStationCard.vue';
-import SwitchCustom from './switchCustom.vue';
+import SwitchCustom from './SwitchCustom.vue';
 const subStat = ref<SubStat[]>([]);
 const bike = ref<BikeStat[]>([]);
 
@@ -96,22 +93,15 @@ onMounted(async () => {
   }
 });
 
-const switchResource = () => {
-  if (isShowingSubStat.value) {
-    filteredSubStat.value = subStat.value;
-  } else {
-    filteredBikeStat.value = bike.value;
-  }
-};
 
 const handleOptionChange = (option: string) => {
   selectedOption.value = option;
   // Met à jour les données filtrées en fonction de l'option sélectionnée
-  if (option.includes('Métros')) {
+  if (option.includes('Métro')) {
     filteredSubStat.value = subStat.value;
     filteredBikeStat.value = [];
     isShowingSubStat.value = true;
-    console.log("Metros")
+    console.log("Métro")
   } else if (option.includes('Vélos')) {
     filteredBikeStat.value = bike.value;
     filteredSubStat.value = [];
