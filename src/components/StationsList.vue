@@ -5,7 +5,7 @@
       <div
         class="w-full inline-flex justify-center items-center p-4 bg-gray-100 border-2 border-starblue rounded-lg shadow-md">
         <div class="flex items-center justify-center space-x-6">
-          <SwitchCustom :titles="['Stations de Métro', 'Stations de Vélos', 'Parc Relais']"
+          <SwitchCustom :titles="['Stations de Métro', 'Stations de Vélos', 'Parcs Relais']"
             @updateOption="handleOptionChange" />
         </div>
       </div>
@@ -14,9 +14,9 @@
     <!-- Nombre de ressources trouvées dans une pastille flottante -->
     <div class="fixed bottom-4 right-4 bg-blue-500 text-white text-sm px-4 py-2 rounded-full shadow-lg z-10">
       <span>
-        {{ isShowingSubStat ? filteredSubStat.length : filteredBikeStat.length }}
-        {{ isShowingSubStat ? 'stations de métros' : 'stations de vélos' }} trouvées
+        {{ getResourceCount }} {{ getResourceLabel }} trouvées
       </span>
+
     </div>
 
     <!-- Bouton retour -->
@@ -26,41 +26,51 @@
 
     <!-- Grille de cartes -->
     <div class="grid-container flex flex-col py-2 min-h-screen flex-grow">
-      
-      <div v-if="isShowingSubStat && filteredSubStat.length > 0" class="grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 p-4">
-        <SubStationCard v-for="subStat in filteredSubStat" :key="subStat.nom" :sub-stat="subStat" @click="showDetails(subStat)" />
+
+      <div v-if="isShowingSubStat && !isShowingCarParks && filteredSubStat.length > 0"
+        class="grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 p-4">
+        <GlobalCard v-for="subStat in filteredSubStat" :key="subStat.nom" :data="subStat" :type="'StationMetros'"
+          @click="showDetails(subStat)" />
       </div>
 
-      <div v-if="!isShowingSubStat && filteredBikeStat.length > 0"
+      <div v-if="!isShowingSubStat && !isShowingCarParks && filteredBikeStat.length > 0"
         class="grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 p-4">
-        <VeloStationCard v-for="bikeStat in filteredBikeStat" :key="bikeStat.nom" :bike-stat="bikeStat" />
+        <GlobalCard v-for="bikeStat in filteredBikeStat" :key="bikeStat.nom" :data="bikeStat" :type="'StationVelos'" />
+      </div>
+
+      <div v-if="!isShowingSubStat && isShowingCarParks && filteredCarParks.length > 0"
+        class="grid justify-center grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 p-4">
+        <GlobalCard v-for="carPark in filteredCarParks" :key="carPark.nom" :data="carPark" :type="'ParcRelais'" />
       </div>
 
     </div>
 
-    <SubStationDetail v-if="isModalVisible && isShowingSubStat" :subStat="selectedRessource" :isVisible="isModalVisible" @close="closeModal" />
+    <SubStationDetail v-if="isModalVisible && isShowingSubStat" :subStat="selectedRessource" :isVisible="isModalVisible"
+      @close="closeModal" />
 
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import UtilsApi from '../Utils/UtilsApi';
-import type { BikeStat, SubStat } from '../types';
-import SubStationCard from './SubStationCard.vue';
+import type { BikeStat, CarPark, SubStat } from '../types';
 import SubStationDetail from './SubStationDetail.vue';
-import VeloStationCard from './VeloStationCard.vue';
 import SwitchCustom from './SwitchCustom.vue';
+import GlobalCard from './GlobalCard.vue';
 const subStat = ref<SubStat[]>([]);
 const bike = ref<BikeStat[]>([]);
+const carPark = ref<CarPark[]>([]);
 
 const filteredSubStat = ref<SubStat[]>([]);
 const filteredBikeStat = ref<BikeStat[]>([]);
+const filteredCarParks = ref<CarPark[]>([]);
 const selectedOption = ref<string>('');
 
-const selectedRessource = ref<SubStat | BikeStat | null>(null);
+const selectedRessource = ref<SubStat | BikeStat | CarPark | null>(null);
 
 const isShowingSubStat = ref(true);
+const isShowingCarParks = ref(false);
 const isModalVisible = ref(false);
 
 onMounted(async () => {
@@ -82,14 +92,29 @@ onMounted(async () => {
     const allBikes: BikeStat[] = [];
     const dataBike = await UtilsApi.performRequest("vls-stations-etat-tr/records", 0, 100);
     if (dataBike) {
-      dataBike.forEach((metro: any) => {
-        allBikes.push(metro);
+      dataBike.forEach((velo: any) => {
+        allBikes.push(velo);
       });
     }
     bike.value = allBikes;
     filteredBikeStat.value = bike.value;
   } catch (error) {
     console.error("Erreur lors de l'appel à l'API Velo :", error);
+  }
+
+  try {
+    const allCarParks: CarPark[] = [];
+    const dataCarPark = await UtilsApi.performRequest("tco-parcsrelais-star-etat-tr/records", 0, 100);
+    if (dataCarPark) {
+      dataCarPark.forEach((park: any) => {
+        allCarParks.push(park);
+      });
+    }
+    carPark.value = allCarParks;
+    filteredCarParks.value = carPark.value;
+    console.log(filteredCarParks)
+  } catch (error) {
+    console.error("Erreur lors de l'appel à l'API Parcs Relais :", error);
   }
 });
 
@@ -100,16 +125,24 @@ const handleOptionChange = (option: string) => {
   if (option.includes('Métro')) {
     filteredSubStat.value = subStat.value;
     filteredBikeStat.value = [];
+    filteredCarParks.value = [];
     isShowingSubStat.value = true;
-    console.log("Métro")
+    isShowingCarParks.value = false;
+
   } else if (option.includes('Vélos')) {
     filteredBikeStat.value = bike.value;
     filteredSubStat.value = [];
+    filteredCarParks.value = [];
     isShowingSubStat.value = false;
+    isShowingCarParks.value = false;
+
+
   } else if (option.includes("Relais")) {
-    filteredBikeStat.value = bike.value;
+    filteredBikeStat.value = [];
     filteredSubStat.value = [];
+    filteredCarParks.value = carPark.value;
     isShowingSubStat.value = false;
+    isShowingCarParks.value = true;
   }
 };
 
@@ -127,7 +160,33 @@ const closeModal = () => {
   selectedRessource.value = null;
   isModalVisible.value = false;
 };
+
+const getResourceCount = computed(() => {
+  if (isShowingSubStat.value) return filteredSubStat.value.length;
+  if (!isShowingCarParks.value && !isShowingSubStat) return filteredBikeStat.value.length;
+  if (isShowingCarParks.value) return filteredCarParks.value.length;
+  return 0;
+});
+
+// Propriété calculée pour le libellé des ressources
+const getResourceLabel = computed(() => {
+  if (isShowingSubStat.value) return 'stations de métros';
+  if (!isShowingCarParks.value && !isShowingSubStat) return 'stations de vélos';
+  if (isShowingCarParks.value) return 'parcs relais';
+  return 'ressources';
+});
 </script>
+
+
+
+
+
+
+
+
+
+
+
 
 <style>
 .toggle-switch {
