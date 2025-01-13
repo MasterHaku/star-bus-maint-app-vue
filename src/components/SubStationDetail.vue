@@ -72,7 +72,7 @@ const closeModal = () => {
 onMounted(async () => {
     try {
         const allSubStatDet: SubStatUtils[] = [];
-        const dataSubStatDet = await UtilsApi.performRequest("tco-metro-equipements-etat-tr/records",0,100,props.subStat.idstation,"idstation");
+        const dataSubStatDet = await UtilsApi.performRequest("Star","tco-metro-equipements-etat-tr/records",0,100,props.subStat.idstation,"idstation");
 
 
         if (dataSubStatDet) {

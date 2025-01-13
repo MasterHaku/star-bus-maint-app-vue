@@ -79,3 +79,11 @@ export interface CarPark {
   jrdmentionligne2: null;
 }
 
+export interface CPark {
+  key: string;
+  status: string;
+  max: number;
+  free: number;
+  id: string;
+}
+

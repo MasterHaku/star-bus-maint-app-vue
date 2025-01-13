@@ -1,25 +1,38 @@
 import axios from "axios";
 
 class UtilsApi{
-    url:string;
+    StarURL:string;
+    CitediaURL:string;
 
     constructor(){
-        this.url = "https://data.explore.star.fr/api/explore/v2.1/catalog/datasets/";
+        this.StarURL = "https://data.explore.star.fr/api/explore/v2.1/catalog/datasets/";
+        this.CitediaURL = "https://data.rennesmetropole.fr/api/explore/v2.1/catalog/datasets/"
     }
 
     
-    async performRequest(endpoint:string, offset:number,limit:number, id?:number, dataValue?: string): Promise<string[]> {
+    async performRequest(service: 'Star' | 'Citédia' ,endpoint:string, offset:number,limit:number, id?:number, dataValue?: string): Promise<string[]> {
 
+        let serv = "";
         let finalurl =""
         let data: string[] = [];
+
+        if(service == 'Star'){
+            serv = this.StarURL;
+        }else if(service == 'Citédia'){
+            serv = this.CitediaURL;
+        }else{
+            serv = this.StarURL;
+        }
+            
+
         if(offset == 0 && limit == 0){
-            finalurl = this.url+endpoint;
+            finalurl = serv+endpoint;
         }
         else if(id !== undefined && dataValue !== undefined){
-            finalurl =  this.url+endpoint+"?select=*&where="+dataValue+"%3D"+id+"&limit=100";
+            finalurl =  serv+endpoint+"?select=*&where="+dataValue+"%3D"+id+"&limit=100";
         }
         else{
-            finalurl = this.url+endpoint+"?limit="+limit+"&offset="+offset;
+            finalurl = serv+endpoint+"?limit="+limit+"&offset="+offset;
         }
 
         

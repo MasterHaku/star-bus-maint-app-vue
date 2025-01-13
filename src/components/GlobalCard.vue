@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white shadow rounded p-4">
+    <div class="bg-white rounded p-4 border border-gray-600 ">
         <h2 class="text-lg font-semibold mb-2 text-center">
             <template v-if="type === 'subStat'">
                 {{ (data as SubStat).nom }}
@@ -64,12 +64,31 @@
         </div>
 
         <div v-else-if="type === 'ParcRelais'" class="bg-white shadow rounded p-4" :class="{
-            'text-green-600 font-bold border border-green-600': (data as CarPark).etatouverture === 'En fonctionnement',
-            'text-red-600 font-bold border border-red-600': (data as CarPark).etatouverture !== 'En fonctionnement'
+            'text-green-600 font-bold border border-green-600': (data as CarPark).etatouverture === 'OUVERT',
+            'text-red-600 font-bold border border-red-600': (data as CarPark).etatouverture !== 'OUVERT'
         }">
 
             <h2 class="text-lg font-semibold mb-2 text-center">{{ (data as CarPark).nom }}</h2>
+            <p class="text-gray-700" :class="{
+                'text-green-600 font-bold border border-green-600 rounded px-2 py-1 inline-block': (data as CarPark).etatouverture === 'OUVERT',
+                'text-red-600 font-bold border border-red-600 rounded px-2 py-1 inline-block': (data as CarPark).etatouverture !== 'OUVERT'
+            }">
+                Etat: {{ (data as CarPark).etatouverture }}
+            </p>
+            
+        </div>
+        <div v-else-if="type === 'C-Parks'" class="bg-white shadow rounded p-4" :class="{
+            'text-green-600 font-bold border border-green-600': (data as CPark).status === 'OUVERT',
+            'text-red-600 font-bold border border-red-600': (data as CPark).status !== 'OUVERT'
+        }">
 
+            <h2 class="text-lg font-semibold mb-2 text-center">{{ (data as CPark).key }}</h2>
+            <p class="text-gray-700" :class="{
+                'text-green-600 font-bold border border-green-600 rounded px-2 py-1 inline-block': (data as CPark).status === 'OUVERT',
+                'text-red-600 font-bold border border-red-600 rounded px-2 py-1 inline-block': (data as CPark).status !== 'OUVERT'
+            }">
+                Etat: {{ (data as CarPark).etatouverture }}
+            </p>
             
         </div>
 
@@ -83,17 +102,17 @@
 
 <script setup lang="ts">
 import { defineProps } from 'vue';
-import type { SubStat, Bus, BikeStat, CarPark } from '../types';
+import type { SubStat, Bus, BikeStat, CarPark, CPark } from '../types';
 
 // Props : données dynamiques et type
 defineProps({
     type: {
         type: String,
         required: true,
-        validator: (value: string) => ['subStat', 'bus'].includes(value),
+        validator: (value: string) => ['StationVelos', 'StationMetros','ParcRelais','C-Parks'].includes(value),
     },
     data: {
-        type: Object as () => SubStat | Bus | BikeStat | CarPark,
+        type: Object as () => SubStat | Bus | BikeStat | CarPark |CPark,
         required: true,
     },
 });
