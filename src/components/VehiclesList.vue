@@ -105,9 +105,9 @@
     </div>
     <!-- Modal de détails du bus -->
 
-    <BusDetail v-if="isModalVisible && isShowingBus" :bus="selectedRessource" :isVisible="isModalVisible"
+    <BusDetail v-if="isModalVisible && isShowingBus" :bus="(selectedRessource as Bus)" :isVisible="isModalVisible"
       @close="closeModal" />
-    <MetroDetail v-if="isModalVisible && !isShowingBus" :metro="selectedRessource" :isVisible="isModalVisible"
+    <MetroDetail v-if="isModalVisible && !isShowingBus" :metro="(selectedRessource as Metro)" :isVisible="isModalVisible"
       @close="closeModal" />
   </div>
 </template>
@@ -153,7 +153,7 @@ onMounted(async () => {
   try {
     const allBuses: Bus[] = [];
     for (let i = 0; i < 7; i++) {
-      const dataBus = await UtilsApi.performRequest("tco-bus-materiel-vehicules-td/records", i * 100, 100);
+      const dataBus = await UtilsApi.performRequest("Star","tco-bus-materiel-vehicules-td/records", i * 100, 100);
       if (dataBus) {
         dataBus.forEach((bus: any) => {
           if (!seenIdsBus.has(bus.id)) {
@@ -171,7 +171,7 @@ onMounted(async () => {
 
   try {
     const allMetros: Metro[] = [];
-    const dataMetro = await UtilsApi.performRequest("tco-metro-materiel-vehicules-td/records", 0, 100);
+    const dataMetro = await UtilsApi.performRequest('Star',"tco-metro-materiel-vehicules-td/records", 0, 100);
     if (dataMetro) {
       dataMetro.forEach((metro: any) => {
         if (!seenIdsMetro.has(metro.id)) {
@@ -182,7 +182,6 @@ onMounted(async () => {
     }
     metros.value = allMetros;
     filteredMetro.value = metros.value
-    console.log(metros.value);
   } catch (error) {
     console.error("Erreur lors de l'appel à l'API METRO :", error);
   }
@@ -190,7 +189,6 @@ onMounted(async () => {
 });
 
 const switchResource = () => {
-  console.log("ici")
   if (isShowingBus.value) {
     filteredBuses.value = buses.value;
   } else {

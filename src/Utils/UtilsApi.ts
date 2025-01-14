@@ -10,6 +10,16 @@ class UtilsApi{
     }
 
     
+    /**
+     * 
+     * @param service 
+     * @param endpoint 
+     * @param offset 
+     * @param limit 
+     * @param id 
+     * @param dataValue 
+     * @returns 
+     */
     async performRequest(service: 'Star' | 'Citédia' ,endpoint:string, offset:number,limit:number, id?:number, dataValue?: string): Promise<string[]> {
 
         let serv = "";
@@ -35,8 +45,6 @@ class UtilsApi{
             finalurl = serv+endpoint+"?limit="+limit+"&offset="+offset;
         }
 
-        
-        console.log(finalurl)
         try {
             const response = await axios.get(finalurl);
             data = response.data.results; // Stocke les données dans `data`

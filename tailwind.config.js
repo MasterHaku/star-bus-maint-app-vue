@@ -16,6 +16,7 @@ export default {
       blue: colors.blue,
       red: colors.red,
       green: colors.green,
+      orange: colors.orange,
       starblue :'#053774',
       stargreen :'#02b1ae',
       staryellow :'#f2b70b',
